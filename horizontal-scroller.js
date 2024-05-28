@@ -1,3 +1,5 @@
+// v1.4.1
+
 function scrollTo(element, to, duration) {
     var start = element.scrollLeft,
         change = to - start,
