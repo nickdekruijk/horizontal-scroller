@@ -1,4 +1,4 @@
-// v1.1
+// v1.2
 
 function scrollTo(element, to, duration) {
     var start = element.scrollLeft,
@@ -28,10 +28,15 @@ document.querySelectorAll('.scrollbar-x + .scroll-buttons > .scroll-button').for
         var direction = this.classList.contains('scroll-button-next') ? 3 : -3;
         var scroll = this.parentElement.previousElementSibling;
         var current = 1;
-        scroll.querySelectorAll('.item').forEach(function (item, n) {
-            if (item.offsetLeft <= scroll.scrollLeft) current = n + 1;
-        });
-        scrollTo(scroll, scroll.querySelector('.item:nth-child(' + (current + direction) + ')').offsetLeft, 250);
+        var items = scroll.children[0].children;
+        for (n in items) {
+            if (items[n].offsetLeft <= scroll.scrollLeft) current = n;
+        }
+        let goto = Math.round(current) + direction;
+        if (goto < 0) {
+            goto = 0;
+        }
+        scrollTo(scroll, items[goto].offsetLeft, 250);
     });
 });
 
@@ -45,6 +50,7 @@ document.querySelectorAll('.scrollbar-x').forEach(function (el) {
         a.addEventListener('click', function (e) {
             if (preventLinks) {
                 e.preventDefault();
+                e.stopImmediatePropagation();
             }
         });
     });
