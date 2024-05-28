@@ -4,7 +4,7 @@ function scrollTo(element, to, duration) {
         currentTime = 0,
         increment = 5;
 
-    var animateScroll = function() {
+    var animateScroll = function () {
         currentTime += increment;
         var val = Math.easeInOutQuad(currentTime, start, change, duration);
         element.scrollLeft = val;
@@ -14,19 +14,19 @@ function scrollTo(element, to, duration) {
     };
     animateScroll();
 }
-Math.easeInOutQuad = function(t, b, c, d) {
+Math.easeInOutQuad = function (t, b, c, d) {
     t /= d / 2;
     if (t < 1) return c / 2 * t * t + b;
     t--;
     return -c / 2 * (t * (t - 2) - 1) + b;
 };
 
-document.querySelectorAll('.scrollbar-x + .scroll-buttons > .scroll-button').forEach(function(el) {
-    el.addEventListener('click', function(e) {
+document.querySelectorAll('.scrollbar-x + .scroll-buttons > .scroll-button').forEach(function (el) {
+    el.addEventListener('click', function (e) {
         var direction = this.classList.contains('scroll-button-next') ? 1 : -1;
         var scroll = this.parentElement.previousElementSibling;
         var go = -1;
-        scroll.querySelectorAll('.item').forEach(function(item) {
+        scroll.querySelectorAll('.item').forEach(function (item) {
             if ((item.offsetLeft > scroll.scrollLeft && go == -1 && direction == 1) || (item.offsetLeft < scroll.scrollLeft && direction == -1)) {
                 go = item.offsetLeft;
             }
@@ -35,21 +35,21 @@ document.querySelectorAll('.scrollbar-x + .scroll-buttons > .scroll-button').for
     });
 });
 
-document.querySelectorAll('.scrollbar-x').forEach(function(el) {
+document.querySelectorAll('.scrollbar-x').forEach(function (el) {
     let isDown = false;
     let startX;
     let scrollLeft;
     let preventLinks = true;
 
-    el.querySelectorAll('A[href]').forEach(function(a) {
-        a.addEventListener('click', function(e) {
+    el.querySelectorAll('A[href]').forEach(function (a) {
+        a.addEventListener('click', function (e) {
             if (preventLinks) {
                 e.preventDefault();
             }
         });
     });
 
-    el.addEventListener('scroll', function(e) {
+    el.addEventListener('scroll', function (e) {
         if (el.scrollLeft <= 0) {
             el.nextElementSibling.querySelector('.scroll-button-prev').classList.add('hide');
         } else {
@@ -63,23 +63,23 @@ document.querySelectorAll('.scrollbar-x').forEach(function(el) {
     });
     el.dispatchEvent(new Event('scroll'));
 
-    el.addEventListener('mousedown', function(e) {
+    el.addEventListener('mousedown', function (e) {
         isDown = true;
         el.classList.add('dragging');
         startX = e.pageX - el.offsetLeft;
         scrollLeft = el.scrollLeft;
     });
-    el.addEventListener('mouseleave', function(e) {
+    el.addEventListener('mouseleave', function (e) {
         isDown = false;
         el.classList.remove('dragging');
     });
-    el.addEventListener('mouseup', function(e) {
+    el.addEventListener('mouseup', function (e) {
         isDown = false;
         preventLinks = (startX - (e.pageX - el.offsetLeft));
         e.preventDefault();
         el.classList.remove('dragging');
     });
-    el.addEventListener('mousemove', function(e) {
+    el.addEventListener('mousemove', function (e) {
         if (!isDown) return;
         e.preventDefault();
         const x = e.pageX - el.offsetLeft;
