@@ -1,4 +1,4 @@
-// v1.2
+// v1.3
 
 function scrollTo(element, to, duration) {
     var start = element.scrollLeft,
@@ -29,6 +29,10 @@ document.querySelectorAll('.scrollbar-x + .scroll-buttons > .scroll-button').for
         var scroll = this.parentElement.previousElementSibling;
         var current = 1;
         var items = scroll.children[0].children;
+        var steps = Math.floor(scroll.clientWidth / items[0].clientWidth);
+        if (steps) {
+            direction = direction * steps;
+        }
         for (n in items) {
             if (items[n].offsetLeft <= scroll.scrollLeft) current = n;
         }
