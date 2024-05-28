@@ -1,3 +1,5 @@
+// v1.1
+
 function scrollTo(element, to, duration) {
     var start = element.scrollLeft,
         change = to - start,
@@ -25,13 +27,11 @@ document.querySelectorAll('.scrollbar-x + .scroll-buttons > .scroll-button').for
     el.addEventListener('click', function (e) {
         var direction = this.classList.contains('scroll-button-next') ? 3 : -3;
         var scroll = this.parentElement.previousElementSibling;
-        var go = -1;
-        scroll.querySelectorAll('.item').forEach(function (item) {
-            if ((item.offsetLeft > scroll.scrollLeft && go == -1 && direction == 1) || (item.offsetLeft < scroll.scrollLeft && direction == -1)) {
-                go = item.offsetLeft;
-            }
+        var current = 1;
+        scroll.querySelectorAll('.item').forEach(function (item, n) {
+            if (item.offsetLeft <= scroll.scrollLeft) current = n + 1;
         });
-        scrollTo(scroll, go, 400);
+        scrollTo(scroll, scroll.querySelector('.item:nth-child(' + (current + direction) + ')').offsetLeft, 250);
     });
 });
 
