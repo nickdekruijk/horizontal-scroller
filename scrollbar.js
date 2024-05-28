@@ -1,4 +1,4 @@
-// v1.4
+// v1.4.1
 
 function scrollTo(element, to, duration) {
     var start = element.scrollLeft,
@@ -33,7 +33,7 @@ function scrollbarInit() {
             var scroll = this.parentElement.previousElementSibling;
             var current = 1;
             var items = scroll.children[0].children;
-            var steps = scroll.dataset.scrollbarSteps ? scroll.dataset.scrollbarSteps : el.Math.floor(scroll.clientWidth / items[0].clientWidth);
+            var steps = scroll.dataset.scrollbarSteps ? scroll.dataset.scrollbarSteps : Math.floor(scroll.clientWidth / items[0].clientWidth);
             if (steps) {
                 direction = direction * steps;
             }
