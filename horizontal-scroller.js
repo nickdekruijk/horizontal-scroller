@@ -44,7 +44,7 @@ window.HorizontalScroller = function (options) {
             button.addEventListener('click', function (e) {
                 let direction = this.classList.contains('button-right') ? 1 : -1;
                 let current = 1;
-                let items = el.children[0].children;
+                let items = el.children.length > 1 ? el.children : el.children[0].children;
                 for (n in items) {
                     if (items[n].offsetLeft <= el.scrollLeft) {
                         current = n;
