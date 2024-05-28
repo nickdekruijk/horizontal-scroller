@@ -1,62 +1,26 @@
-// v1.4.1
+window.HorizontalScroller = function (options) {
+    // Default settings
+    this.option = {
+        selector: ".horizontal-scroller",
+        buttonRight: true,
+        buttonLeft: true,
+        draggable: true,
+    }
 
-function scrollTo(element, to, duration) {
-    var start = element.scrollLeft,
-        change = to - start,
-        currentTime = 0,
-        increment = 5;
+    // Merge defaults and options into settings to use
+    Object.assign(this.option, options);
 
-    var animateScroll = function () {
-        currentTime += increment;
-        var val = Math.easeInOutQuad(currentTime, start, change, duration);
-        element.scrollLeft = val;
-        if (currentTime < duration) {
-            setTimeout(animateScroll, increment);
-        }
-    };
-    animateScroll();
-}
-Math.easeInOutQuad = function (t, b, c, d) {
-    t /= d / 2;
-    if (t < 1) return c / 2 * t * t + b;
-    t--;
-    return -c / 2 * (t * (t - 2) - 1) + b;
-};
+    // Set _this so we can access it from anywhere
+    var _this = this;
 
-function scrollbarInit() {
-    document.querySelectorAll('.scrollbar-x + .scroll-buttons > .scroll-button').forEach(function (el) {
-        if (el.dataset.scrollbar_initialized) return;
-        el.dataset.scrollbar_initialized = 1;
-
-        el.addEventListener('click', function (e) {
-            var direction = this.classList.contains('scroll-button-next') ? 1 : -1;
-            var scroll = this.parentElement.previousElementSibling;
-            var current = 1;
-            var items = scroll.children[0].children;
-            var steps = scroll.dataset.scrollbarSteps ? scroll.dataset.scrollbarSteps : Math.floor(scroll.clientWidth / items[0].clientWidth);
-            if (steps) {
-                direction = direction * steps;
-            }
-            for (n in items) {
-                if (items[n].offsetLeft <= scroll.scrollLeft) current = n;
-            }
-            let goto = Math.round(current) + direction;
-            if (goto < 0) {
-                goto = 0;
-            }
-            scrollTo(scroll, items[goto].offsetLeft, 250);
-        });
-    });
-
-    document.querySelectorAll('.scrollbar-x').forEach(function (el) {
-        if (el.dataset.scrollbar_initialized) return;
-        el.dataset.scrollbar_initialized = 1;
-
+    // Initialize all scrollable elements
+    document.querySelectorAll(_this.option.selector).forEach(function (el) {
         let isDown = false;
         let startX;
         let scrollLeft;
-        let preventLinks = true;
 
+        // Prevent clicks on links while dragging
+        let preventLinks = false;
         el.querySelectorAll('A[href]').forEach(function (a) {
             a.addEventListener('click', function (e) {
                 if (preventLinks) {
@@ -66,43 +30,81 @@ function scrollbarInit() {
             });
         });
 
-        el.addEventListener('scroll', function (e) {
-            if (el.scrollLeft <= 0) {
-                el.nextElementSibling.querySelector('.scroll-button-prev').classList.add('hide');
-            } else {
-                el.nextElementSibling.querySelector('.scroll-button-prev').classList.remove('hide');
-            }
-            if (el.scrollLeft + el.clientWidth >= el.scrollWidth) {
-                el.nextElementSibling.querySelector('.scroll-button-next').classList.add('hide');
-            } else {
-                el.nextElementSibling.querySelector('.scroll-button-next').classList.remove('hide');
-            }
-        });
-        el.dispatchEvent(new Event('scroll'));
+        // Add left button
+        if (_this.option.buttonLeft) {
+            el.insertAdjacentHTML('afterend', '<div class="button-left' + (el.scrollLeft <= 0 ? ' hide' : '') + '"></div>');
+        }
+        // Add right button
+        if (_this.option.buttonRight) {
+            el.insertAdjacentHTML('afterend', '<div class="button-right' + (el.scrollLeft + el.clientWidth >= el.scrollWidth ? ' hide' : '') + '"></div>');
+        }
 
-        el.addEventListener('mousedown', function (e) {
-            isDown = true;
-            el.classList.add('dragging');
-            startX = e.pageX - el.offsetLeft;
-            scrollLeft = el.scrollLeft;
+        // Make the buttons work
+        el.parentElement.querySelectorAll('.button-left, .button-right').forEach(function (button) {
+            button.addEventListener('click', function (e) {
+                let direction = this.classList.contains('button-right') ? 1 : -1;
+                let current = 1;
+                let items = el.children[0].children;
+                for (n in items) {
+                    if (items[n].offsetLeft <= el.scrollLeft) {
+                        current = n;
+                    }
+                }
+                let goto = Math.round(current) + direction;
+                if (goto < 0) {
+                    goto = 0;
+                }
+                el.scrollTo({ left: items[goto].offsetLeft, behavior: 'smooth' });
+            });
         });
-        el.addEventListener('mouseleave', function (e) {
-            isDown = false;
-            el.classList.remove('dragging');
-        });
-        el.addEventListener('mouseup', function (e) {
-            isDown = false;
-            preventLinks = (startX - (e.pageX - el.offsetLeft));
-            e.preventDefault();
-            el.classList.remove('dragging');
-        });
-        el.addEventListener('mousemove', function (e) {
-            if (!isDown) return;
-            e.preventDefault();
-            const x = e.pageX - el.offsetLeft;
-            const walk = (x - startX) * 1; //scroll-fast
-            el.scrollLeft = scrollLeft - walk;
-        });
+
+        // Show or hide buttons depending on scroll position
+        function checkButtons() {
+            if (_this.option.buttonLeft) {
+                if (el.scrollLeft <= 0) {
+                    el.parentElement.querySelector('.button-left').classList.add('hide');
+                } else {
+                    el.parentElement.querySelector('.button-left').classList.remove('hide');
+                }
+            }
+            if (_this.option.buttonRight) {
+                if (el.scrollLeft + el.clientWidth >= el.scrollWidth) {
+                    el.parentElement.querySelector('.button-right').classList.add('hide');
+                } else {
+                    el.parentElement.querySelector('.button-right').classList.remove('hide');
+                }
+            }
+        }
+
+        // Toggle buttons on scroll or viewport resize
+        el.addEventListener('scroll', checkButtons);
+        window.addEventListener('resize', checkButtons);
+
+        // Add drag functionality
+        if (_this.option.draggable) {
+            el.addEventListener('mousedown', function (e) {
+                isDown = true;
+                el.classList.add('dragging');
+                startX = e.pageX - el.offsetLeft;
+                scrollLeft = el.scrollLeft;
+            });
+            el.addEventListener('mouseleave', function (e) {
+                isDown = false;
+                el.classList.remove('dragging');
+            });
+            el.addEventListener('mouseup', function (e) {
+                isDown = false;
+                preventLinks = (startX - (e.pageX - el.offsetLeft));
+                e.preventDefault();
+                el.classList.remove('dragging');
+            });
+            el.addEventListener('mousemove', function (e) {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - el.offsetLeft;
+                const walk = (x - startX) * 1; //scroll-fast
+                el.scrollLeft = scrollLeft - walk;
+            });
+        }
     });
 }
-scrollbarInit();

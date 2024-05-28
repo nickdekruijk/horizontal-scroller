@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .relative {
+            position: relative;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .horizontal-scroller {
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        .items {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            gap: 40px;
+        }
+
+        .item {
+            flex: 0 0 auto;
+            padding: 10%;
+            background-color: #aaa;
+        }
+
+        .button-right,
+        .button-left {
+            position: absolute;
+            top: 50%;
+            width: 40px;
+            height: 40px;
+            border-radius: 100%;
+            transform: translateY(-50%) rotate(90deg);
+            background: #ccc no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 13.1l-8-8 2.1-2.2 5.9 5.9 5.9-5.9 2.1 2.2z'/%3E%3C/svg%3E") center center;
+            background-size: 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: opacity 0.25s;
+        }
+
+        .button-right {
+            right: 0;
+            transform: translateY(-50%) rotate(-90deg);
+        }
+
+        .hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .horizontal-scroller {
+            cursor: grab;
+        }
+
+        .horizontal-scroller::-webkit-scrollbar {
+            height: 13px;
+        }
+
+        .horizontal-scroller::-webkit-scrollbar-track {
+            background: linear-gradient(white, white 6px, rgba(0, 0, 0, 0.1) 6px, rgba(0, 0, 0, 0.1) 7px, transparent 7px);
+        }
+
+        .horizontal-scroller::-webkit-scrollbar-thumb {
+            background: linear-gradient(white, white 4px, #ccc 4px, #ccc 9px, transparent 9px);
+        }
+
+        .horizontal-scroller::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(white, white 4px, #999 4px, #999 9px, transparent 9px);
+        }
+
+        .horizontal-scroller.dragging {
+            cursor: grabbing;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="relative">
+        <div class="horizontal-scroller">
+            <ul class="items">
+                <li class="item"><a href="#">Item A</a></li>
+                <li class="item"><a href="#">Item with a long name</a></li>
+                <li class="item"><a href="#">Item C</a></li>
+                <li class="item"><a href="#">Item D</a></li>
+                <li class="item"><a href="#">Item E</a></li>
+                <li class="item"><a href="#">Item F</a></li>
+                <li class="item"><a href="#">Item G</a></li>
+                <li class="item"><a href="#">Item H</a></li>
+                <li class="item"><a href="#">Item I</a></li>
+                <li class="item"><a href="#">Item J</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="relative">
+        <div class="horizontal-scroller">
+            <ul class="items">
+                <li class="item"><a href="#">Item A</a></li>
+                <li class="item"><a href="#">Item B</a></li>
+                <li class="item"><a href="#">Item C</a></li>
+                <li class="item"><a href="#">Item D</a></li>
+                <li class="item"><a href="#">Item E</a></li>
+                <li class="item"><a href="#">Item F</a></li>
+                <li class="item"><a href="#">Item G</a></li>
+                <li class="item"><a href="#">Item H</a></li>
+                <li class="item"><a href="#">Item I</a></li>
+                <li class="item"><a href="#">Item J</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="relative">
+        <div class="horizontal-scroller">
+            <ul class="items">
+                <li class="item"><a href="#">Item A</a></li>
+                <li class="item"><a href="#">Item B</a></li>
+                <li class="item"><a href="#">Item C</a></li>
+            </ul>
+        </div>
+    </div>
+    <script src="horizontal-scroller.js"></script>
+    <script>
+        new HorizontalScroller({
+            selector: ".horizontal-scroller",
+            buttonRight: true,
+            buttonLeft: true,
+            draggable: true,
+        });
+    </script>
+</body>
+
+</html>
