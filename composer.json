@@ -1,6 +1,6 @@
 {
-    "name": "nickdekruijk/horizontal-scrollbar",
-    "description": "Add a horizontal scrollbar to a element",
+    "name": "nickdekruijk/horizontal-scroller",
+    "description": "Add a horizontal scrolling element",
     "license": "MIT",
 	"keywords": [
 		"horizontal",
