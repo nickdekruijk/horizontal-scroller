@@ -76,7 +76,8 @@ window.HorizontalScroller = function (options) {
         // If infinite mode is on then check if we need to scroll back or forward to prevent reaching the edges
         function checkInfinite() {
             if (_this.option.infinite) {
-                let treshold = Math.round(el.scrollWidth / 3);
+                let items = el.children.length > 1 ? el.children : el.children[0].children;
+                let treshold = items[items.length / 3].offsetLeft;
                 if (el.scrollLeft < treshold) {
                     el.scrollLeft = el.scrollLeft + treshold;
                 } else if (el.scrollLeft > treshold * 2) {
