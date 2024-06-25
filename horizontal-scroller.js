@@ -2,6 +2,7 @@ window.HorizontalScroller = function (options) {
     // Default settings
     this.option = {
         selector: ".horizontal-scroller",
+        buttonClass: "horizontal-scroller-button",
         buttonRight: true,
         buttonLeft: true,
         draggable: true,
@@ -46,17 +47,17 @@ window.HorizontalScroller = function (options) {
 
         // Add left button
         if (_this.option.buttonLeft) {
-            el.insertAdjacentHTML('afterend', '<div class="button-left' + (el.scrollLeft <= 0 ? ' hide' : '') + '"></div>');
+            el.insertAdjacentHTML('afterend', '<div class="' + _this.option.buttonClass + ' ' + _this.option.buttonClass + '-left' + (el.scrollLeft <= 0 ? ' hide' : '') + '"></div>');
         }
         // Add right button
         if (_this.option.buttonRight) {
-            el.insertAdjacentHTML('afterend', '<div class="button-right' + (el.scrollLeft + el.clientWidth >= el.scrollWidth ? ' hide' : '') + '"></div>');
+            el.insertAdjacentHTML('afterend', '<div class="' + _this.option.buttonClass + ' ' + _this.option.buttonClass + '-right' + (el.scrollLeft + el.clientWidth >= el.scrollWidth ? ' hide' : '') + '"></div>');
         }
 
         // Make the buttons work
-        el.parentElement.querySelectorAll('.button-left, .button-right').forEach(function (button) {
+        el.parentElement.querySelectorAll('.' + _this.option.buttonClass).forEach(function (button) {
             button.addEventListener('click', function (e) {
-                let direction = this.classList.contains('button-right') ? 1 : -1;
+                let direction = this.classList.contains(_this.option.buttonClass + '-right') ? 1 : -1;
                 let current = 1;
                 let items = el.children.length > 1 ? el.children : el.children[0].children;
                 for (n in items) {
@@ -90,16 +91,16 @@ window.HorizontalScroller = function (options) {
             checkInfinite();
             if (_this.option.buttonLeft) {
                 if (el.scrollLeft <= 0) {
-                    el.parentElement.querySelector('.button-left').classList.add('hide');
+                    el.parentElement.querySelector('.' + _this.option.buttonClass + '-left').classList.add('hide');
                 } else {
-                    el.parentElement.querySelector('.button-left').classList.remove('hide');
+                    el.parentElement.querySelector('.' + _this.option.buttonClass + '-left').classList.remove('hide');
                 }
             }
             if (_this.option.buttonRight) {
                 if (el.scrollLeft + el.clientWidth >= el.scrollWidth) {
-                    el.parentElement.querySelector('.button-right').classList.add('hide');
+                    el.parentElement.querySelector('.' + _this.option.buttonClass + '-right').classList.add('hide');
                 } else {
-                    el.parentElement.querySelector('.button-right').classList.remove('hide');
+                    el.parentElement.querySelector('.' + _this.option.buttonClass + '-right').classList.remove('hide');
                 }
             }
         }

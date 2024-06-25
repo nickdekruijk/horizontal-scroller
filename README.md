@@ -65,8 +65,7 @@ Then make it better by adding this javascript (these options are the default so 
 This will add two buttons that you can style yourself, for example:
 
 ```css
-.horizontal-scroller .button-right,
-.horizontal-scroller .button-left {
+.horizontal-scroller-button {
     position: absolute;
     display: block;
     height: 50px;
@@ -74,10 +73,10 @@ This will add two buttons that you can style yourself, for example:
     top: 50%;
     transform: translateY(-50%);
 }
-.horizontal-scroller .button-left {
+.horizontal-scroller-button-left {
     left: 0:
 }
-.horizontal-scroller .button-right {
+.horizontal-scroller-button-right {
     right: 0:
 }
 ```
