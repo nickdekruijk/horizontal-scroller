@@ -5,6 +5,7 @@ window.HorizontalScroller = function (options) {
         buttonRight: true,
         buttonLeft: true,
         draggable: true,
+        infinite: false,
     }
 
     // Merge defaults and options into settings to use
@@ -18,6 +19,19 @@ window.HorizontalScroller = function (options) {
         let isDown = false;
         let startX;
         let scrollLeft;
+
+        // Clone all items to make it infinite
+        if (_this.option.infinite) {
+            let cloneTarget = el.children.length > 1 ? el : el.children[0];
+            let items = cloneTarget.cloneNode(true).children;
+            // Clone everything twice to make it less likely to overlap
+            for (const item of items) {
+                cloneTarget.insertAdjacentHTML('beforeend', item.outerHTML);
+            }
+            for (const item of items) {
+                cloneTarget.insertAdjacentHTML('beforeend', item.outerHTML);
+            }
+        }
 
         // Prevent clicks on links while dragging
         let preventLinks = false;
@@ -58,8 +72,22 @@ window.HorizontalScroller = function (options) {
             });
         });
 
+        // If infinite mode is on then check if we need to scroll back or forward to prevent reaching the edges
+        function checkInfinite() {
+            if (_this.option.infinite) {
+                let treshold = Math.round(el.scrollWidth / 3);
+                if (el.scrollLeft < treshold) {
+                    el.scrollLeft = el.scrollLeft + treshold;
+                } else if (el.scrollLeft > treshold * 2) {
+                    el.scrollLeft = el.scrollLeft - treshold;
+                }
+            }
+        }
+        checkInfinite();
+
         // Show or hide buttons depending on scroll position
         function checkButtons() {
+            checkInfinite();
             if (_this.option.buttonLeft) {
                 if (el.scrollLeft <= 0) {
                     el.parentElement.querySelector('.button-left').classList.add('hide');
