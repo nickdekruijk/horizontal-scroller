@@ -21,6 +21,11 @@ window.HorizontalScroller = function (options) {
         let startX;
         let scrollLeft;
 
+        // Disable infinite mode if content isn't wide enough to scroll
+        if (el.scrollWidth <= el.clientWidth) {
+            _this.option.infinite = false;
+        }
+
         // Clone all items to make it infinite
         if (_this.option.infinite) {
             let cloneTarget = el.children.length > 1 ? el : el.children[0];
