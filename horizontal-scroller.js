@@ -67,12 +67,24 @@ window.HorizontalScroller = function (options) {
                 let items = el.children.length > 1 ? el.children : el.children[0].children;
                 for (n in items) {
                     if (items[n].offsetLeft <= el.scrollLeft) {
-                        current = n;
+                        current = parseInt(n);
                     }
                 }
                 let goto = Math.round(current) + direction;
                 if (goto < 0) {
                     goto = 0;
+                }
+                if (_this.option.infinite) {
+                    itemCount = items.length / 3;
+                    if (direction < 0 && goto < itemCount) {
+                        goto += itemCount;
+                        current += itemCount;
+                    }
+                    if (direction > 0 && goto > itemCount * 2) {
+                        goto -= itemCount;
+                        current -= itemCount;
+                    }
+                    el.scrollTo({ left: items[current].offsetLeft });
                 }
                 el.scrollTo({ left: items[goto].offsetLeft, behavior: 'smooth' });
             });
